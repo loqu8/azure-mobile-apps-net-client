@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <RootNamespace>Loqu8.Azure.Mobile.Client.SQLiteStore</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Loqu8|AnyCPU'" />
+
+  <ItemGroup>
+    <Compile Include="..\Microsoft.Azure.Mobile.Client.SQLiteStore\ColumnDefinition.cs" Link="ColumnDefinition.cs" />
+    <Compile Include="..\Microsoft.Azure.Mobile.Client.SQLiteStore\Extensions\EnumerableExtensions.cs" Link="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="..\Microsoft.Azure.Mobile.Client.SQLiteStore\MobileServiceSQLiteStore.cs" Link="MobileServiceSQLiteStore.cs" />
+    <Compile Include="..\Microsoft.Azure.Mobile.Client.SQLiteStore\MobileServiceSQLiteStoreExtensions.cs" Link="MobileServiceSQLiteStoreExtensions.cs" />
+    <Compile Include="..\Microsoft.Azure.Mobile.Client.SQLiteStore\SqlColumnType.cs" Link="SqlColumnType.cs" />
+    <Compile Include="..\Microsoft.Azure.Mobile.Client.SQLiteStore\SqlHelpers.cs" Link="SqlHelpers.cs" />
+    <Compile Include="..\Microsoft.Azure.Mobile.Client.SQLiteStore\SQLiteException.cs" Link="SQLiteException.cs" />
+    <Compile Include="..\Microsoft.Azure.Mobile.Client.SQLiteStore\SQLitePCLRawHelpers.cs" Link="SQLitePCLRawHelpers.cs" />
+    <Compile Include="..\Microsoft.Azure.Mobile.Client.SQLiteStore\SqlQueryFormatter.cs" Link="SqlQueryFormatter.cs" />
+    <Compile Include="..\Microsoft.Azure.Mobile.Client.SQLiteStore\TableDefinition.cs" Link="TableDefinition.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Loqu8.SQLitePCLRaw.bundle_xsqlite3" Version="1.1.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Azure.Mobile.Client\Microsoft.Azure.Mobile.Client.csproj" />
+  </ItemGroup>
+
+</Project>

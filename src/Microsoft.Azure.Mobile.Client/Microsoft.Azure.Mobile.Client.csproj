@@ -44,6 +44,7 @@
   <PropertyGroup Condition=" '$(TargetFramework)' == 'Xamarin.iOS10' ">
     <DefineConstants>$(DefineConstants);PLATFORM_IOS;XAMARIN_AUTH_INTERNAL</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Loqu8|net45|AnyCPU'" />
   
   
   <ItemGroup>

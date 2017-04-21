@@ -93,6 +93,24 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <DefineConstants>XAMARIN</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Loqu8|iPhoneSimulator'">
+    <OutputPath>bin\iPhoneSimulator\Loqu8\</OutputPath>
+    <DefineConstants>__UNIFIED__;__MOBILE__;__IOS__;XAMARIN</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Loqu8|iPhone'">
+    <OutputPath>bin\iPhone\Loqu8\</OutputPath>
+    <DefineConstants>__UNIFIED__;__MOBILE__;__IOS__;XAMARIN</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="app.config">
       <SubType>Designer</SubType>

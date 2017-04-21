@@ -4,5 +4,6 @@
     <TargetFramework>netstandard1.1</TargetFramework>
     <!-- Workaround until Xamarin supports PPDB -->
     <DebugType>full</DebugType>
-  </PropertyGroup>
+  </PropertyGroup>  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Loqu8|AnyCPU'" />
 </Project>

@@ -6,6 +6,7 @@
      <!-- Workaround until Xamarin supports PPDB -->
      <DebugType>full</DebugType>
    </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Loqu8|net45|AnyCPU'" />
    <ItemGroup>
      <PackageReference Include="MSBuild.Sdk.Extras" Version="1.0.0" PrivateAssets="All" />
      <ProjectReference Include="..\..\src\Microsoft.Azure.Mobile.Client\Microsoft.Azure.Mobile.Client.csproj" />
