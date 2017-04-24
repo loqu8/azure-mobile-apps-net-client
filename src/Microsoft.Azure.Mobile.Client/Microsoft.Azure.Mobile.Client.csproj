@@ -5,11 +5,11 @@
     <TargetFrameworks>netstandard1.4;netstandard1.1;net45;MonoAndroid44;Xamarin.iOS10;uap10.0</TargetFrameworks>
     <DefaultLanguage>en-US</DefaultLanguage>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
-    <Version>4.0.0-alpha-002</Version>
+    <Version>4.0.0</Version>
     <PackageTitle>Azure Mobile Client SDK</PackageTitle>
     <Title>Azure Mobile Client SDK</Title>
     <Authors>Microsoft, azure-sdk</Authors>
-    <Product>$(AssemblyName) ($(TargetFramework))</Product>
+    <Product>Loqu8.Azure.Mobile.Client (netstandard1.4)</Product>
     <PackageLicenseUrl>http://go.microsoft.com/fwlink/?LinkId=286110</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Azure/azure-mobile-apps-net-client</PackageProjectUrl>
     <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
@@ -23,6 +23,7 @@
     <!-- Workaround until Xamarin supports PPDB -->
     <DebugType>full</DebugType>
     <RootNamespace>Microsoft.WindowsAzure.MobileServices</RootNamespace>
+    <PackageId>Loqu8.Azure.Mobile.Client</PackageId>
   </PropertyGroup>
   <ItemGroup>
     <!-- Need this to see the parent refs to Auth -->

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
     <RootNamespace>Loqu8.Azure.Mobile.Client.SQLiteStore</RootNamespace>
-    <Version>4.0.0-alpha-002</Version>
+    <Version>4.0.0</Version>
     <Description>This library provides features for creating offline sync-enabled Windows and Xamarin mobile apps that connect to Azure Mobile Apps. It provides an implementation of a local store based on SQLite. To learn more about Azure Mobile, go to http://azure.microsoft.com/mobile.</Description>
     <PackageLicenseUrl>http://go.microsoft.com/fwlink/?LinkId=286110</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Azure/azure-mobile-apps-net-client</PackageProjectUrl>
