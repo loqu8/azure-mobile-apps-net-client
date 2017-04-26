@@ -143,9 +143,22 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
             }
         }
 
-        public static string FormatTableName(string tableName)
+        public static string FormatDbAsName(string dbAsName)
+        {
+            ValidateIdentifier(dbAsName);
+            return dbAsName;
+        }
+
+        public static string FormatTableName(string tableName, string dbAsName)
         {
             ValidateIdentifier(tableName);
+
+            if (!string.IsNullOrEmpty(dbAsName))
+            {
+                ValidateIdentifier(dbAsName);
+                return string.Format("[{0}].[{1}]", dbAsName, tableName);
+            }
+
             return string.Format("[{0}]", tableName);
         }
 

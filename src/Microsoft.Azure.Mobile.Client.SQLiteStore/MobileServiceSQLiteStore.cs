@@ -31,8 +31,34 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
         private Dictionary<string, TableDefinition> tableMap = new Dictionary<string, TableDefinition>(StringComparer.OrdinalIgnoreCase);
         private sqlite3 connection;
         private readonly SemaphoreSlim operationSemaphore = new SemaphoreSlim(1, 1);
+        private string dbAsName;
+        private bool isExternalConnection;
 
         protected MobileServiceSQLiteStore() { }
+
+        // Initializes a new instance of <see cref="MobileServiceSQLiteStore"/>
+
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="MobileServiceSQLiteStore"/>
+        /// </summary>
+        /// <param name="connection">an existing connection</param>
+        /// <param name="dbAsName">an existing db ATTACHed with AS</param>
+        public MobileServiceSQLiteStore(sqlite3 connection, string dbAsName = null)
+        {
+            if (connection == null)
+            {
+                throw new ArgumentNullException("connection");
+            }
+            this.connection = connection;
+            this.isExternalConnection = true;
+
+            // TODO: Add check for dbAsName
+            if (!string.IsNullOrEmpty(dbAsName))
+            {
+                this.dbAsName = SqlHelpers.FormatDbAsName(dbAsName);
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of <see cref="MobileServiceSQLiteStore"/>
@@ -114,7 +140,7 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
             this.EnsureInitialized();
 
             var formatter = new SqlQueryFormatter(query);
-            string sql = formatter.FormatSelect();
+            string sql = formatter.FormatSelect(dbAsName);
 
             return this.operationSemaphore.WaitAsync()
                 .ContinueWith(t =>
@@ -126,7 +152,7 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
 
                         if (query.IncludeTotalCount)
                         {
-                            sql = formatter.FormatSelectCount();
+                            sql = formatter.FormatSelectCount(dbAsName);
                             IList<JObject> countRows = null;
 
                             countRows = this.ExecuteQueryInternal(query.TableName, sql, formatter.Parameters);
@@ -243,7 +269,7 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
             this.EnsureInitialized();
 
             var formatter = new SqlQueryFormatter(query);
-            string sql = formatter.FormatDelete();
+            string sql = formatter.FormatDelete(dbAsName);
 
             return this.operationSemaphore.WaitAsync()
                 .ContinueWith(t =>
@@ -281,7 +307,7 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
             string idRange = String.Join(",", ids.Select((_, i) => "@id" + i));
 
             string sql = string.Format("DELETE FROM {0} WHERE {1} IN ({2})",
-                                       SqlHelpers.FormatTableName(tableName),
+                                       SqlHelpers.FormatTableName(tableName, dbAsName),
                                        MobileServiceSystemColumns.Id,
                                        idRange);
 
@@ -326,7 +352,7 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
 
             this.EnsureInitialized();
 
-            string sql = string.Format("SELECT * FROM {0} WHERE {1} = @id", SqlHelpers.FormatTableName(tableName), MobileServiceSystemColumns.Id);
+            string sql = string.Format("SELECT * FROM {0} WHERE {1} = @id", SqlHelpers.FormatTableName(tableName, dbAsName), MobileServiceSystemColumns.Id);
             var parameters = new Dictionary<string, object>
             {
                 {"@id", id}
@@ -398,7 +424,7 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
 
             ValidateParameterCount(columns.Count);
 
-            string sqlBase = String.Format("UPDATE {0} SET ", SqlHelpers.FormatTableName(tableName));
+            string sqlBase = String.Format("UPDATE {0} SET ", SqlHelpers.FormatTableName(tableName, dbAsName));
 
             foreach (JObject item in items)
             {
@@ -441,7 +467,7 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
             // Generate the prepared insert statement
             string sqlBase = String.Format(
                 "INSERT OR IGNORE INTO {0} ({1}) VALUES ",
-                SqlHelpers.FormatTableName(tableName),
+                SqlHelpers.FormatTableName(tableName, dbAsName),
                 String.Join(", ", columns.Select(c => c.Name).Select(SqlHelpers.FormatMember))
             );
 
@@ -502,10 +528,10 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
                 colDefinitions.Insert(0, String.Format("{0} {1} PRIMARY KEY", SqlHelpers.FormatMember(idColumn.Name), idColumn.StoreType));
             }
 
-            String tblSql = string.Format("CREATE TABLE IF NOT EXISTS {0} ({1})", SqlHelpers.FormatTableName(tableName), String.Join(", ", colDefinitions));
+            String tblSql = string.Format("CREATE TABLE IF NOT EXISTS {0} ({1})", SqlHelpers.FormatTableName(tableName, dbAsName), String.Join(", ", colDefinitions));
             this.ExecuteNonQueryInternal(tblSql, parameters: null);
 
-            string infoSql = string.Format("PRAGMA table_info({0});", SqlHelpers.FormatTableName(tableName));
+            string infoSql = string.Format("PRAGMA table_info({0});", SqlHelpers.FormatTableName(tableName, dbAsName));
             IDictionary<string, JObject> existingColumns = this.ExecuteQueryInternal((TableDefinition)null, infoSql, parameters: null)
                                                                .ToDictionary(c => c.Value<string>("name"), StringComparer.OrdinalIgnoreCase);
 
@@ -515,7 +541,7 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
             foreach (ColumnDefinition column in columnsToCreate)
             {
                 string createSql = string.Format("ALTER TABLE {0} ADD COLUMN {1} {2}",
-                                                 SqlHelpers.FormatTableName(tableName),
+                                                 SqlHelpers.FormatTableName(tableName, dbAsName),
                                                  SqlHelpers.FormatMember(column.Name),
                                                  column.StoreType);
                 this.ExecuteNonQueryInternal(createSql, parameters: null);
@@ -693,7 +719,7 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            if (disposing && !isExternalConnection)
             {
                 this.connection.Dispose();
             }

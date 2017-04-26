@@ -23,7 +23,7 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
             this.query = query;
         }
 
-        public string FormatSelect()
+        public string FormatSelect(string dbAsName)
         {
             var command = new StringBuilder("SELECT ");
 
@@ -37,22 +37,22 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
                 command.Append("*");
             }
 
-            return FormatQuery(command.ToString());
+            return FormatQuery(command.ToString(), dbAsName);
         }
 
-        public string FormatSelectCount()
+        public string FormatSelectCount(string dbAsName)
         {
             this.Reset();
 
             if (this.query.IncludeTotalCount)
             {
-                this.FormatCountQuery();
+                this.FormatCountQuery(dbAsName);
             }
 
             return GetSql();
         }
 
-        public string FormatDelete()
+        public string FormatDelete(string dbAsName)
         {
             var delQuery = this.query.Clone(); // create a copy to avoid modifying the original
 
@@ -61,22 +61,22 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
             delQuery.IncludeTotalCount = false;
 
             var formatter = new SqlQueryFormatter(delQuery);
-            string selectIdQuery = formatter.FormatSelect();
+            string selectIdQuery = formatter.FormatSelect(dbAsName);
             string idMemberName = SqlHelpers.FormatMember(MobileServiceSystemColumns.Id);
-            string tableName = SqlHelpers.FormatTableName(delQuery.TableName);
+            string tableName = SqlHelpers.FormatTableName(delQuery.TableName, dbAsName);
             string command = string.Format("DELETE FROM {0} WHERE {1} IN ({2})", tableName, idMemberName, selectIdQuery);
             this.Parameters = formatter.Parameters;
 
             return command;
         }
 
-        private string FormatQuery(string command)
+        private string FormatQuery(string command, string dbAsName)
         {
             Reset();
 
             this.sql.Append(command);
 
-            string tableName = SqlHelpers.FormatTableName(this.query.TableName);
+            string tableName = SqlHelpers.FormatTableName(this.query.TableName, dbAsName);
             this.sql.AppendFormat(" FROM {0}", tableName);
 
             if (this.query.Filter != null)
@@ -118,9 +118,9 @@ namespace Microsoft.WindowsAzure.MobileServices.SQLiteStore
             }
         }
 
-        private void FormatCountQuery()
+        private void FormatCountQuery(string dbAsName)
         {
-            string tableName = SqlHelpers.FormatTableName(this.query.TableName);
+            string tableName = SqlHelpers.FormatTableName(this.query.TableName, dbAsName);
             this.sql.AppendFormat("SELECT COUNT(1) AS [count] FROM {0}", tableName);
 
             if (this.query.Filter != null)
