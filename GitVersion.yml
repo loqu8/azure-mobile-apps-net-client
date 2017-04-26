@@ -1,0 +1,10 @@
+next-version: 4.0.2 
+assembly-versioning-scheme: MajorMinorPatch
+mode: ContinuousDeployment
+build-metadata-padding: 4
+legacy-semver-padding: 4
+
+branches: {}
+
+continuous-delivery-fallback-tag: alpha
+commit-message-incrementing: Enabled
