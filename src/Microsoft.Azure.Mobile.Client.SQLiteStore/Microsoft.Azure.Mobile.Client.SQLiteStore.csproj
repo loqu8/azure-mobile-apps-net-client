@@ -21,6 +21,7 @@
     <DebugType>full</DebugType>
     <RootNamespace>Microsoft.WindowsAzure.MobileServices.SQLiteStore</RootNamespace>
     <PackageId>Loqu8.Azure.Mobile.Client.SQLiteStore</PackageId>
+    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.3' ">portable-net45+win81</PackageTargetFallback>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Loqu8|net45|AnyCPU'" />
   <ItemGroup>
