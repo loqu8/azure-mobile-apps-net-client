@@ -5,9 +5,13 @@
 using System;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using PCLStorage;
+
 
 namespace Microsoft.WindowsAzure.MobileServices
 {
+
     /// <summary>
     /// Provides access to platform-specific framework API's.
     /// </summary>
@@ -31,11 +35,11 @@ namespace Microsoft.WindowsAzure.MobileServices
                 // create if not yet created
                 if (current == null)
                 {
-#if !NETSTANDARD1_4 && !NETSTANDARD1_1
+                    if (PlatformInformation.OSInfoQuery == null)
+                    {
+                        throw new ArgumentNullException("PlatformInformation.OSInfoQuery cannot be null");
+                    }
                     current = new CurrentPlatform();
-#else
-                    throw new PlatformNotSupportedException("TODO...");
-#endif
                 }
 
                 return current;
